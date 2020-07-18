@@ -49,7 +49,7 @@ public class SFTPActionConfig extends PluginConfig {
   public String privateKey;
 
   @Description("Passphrase to be used with private key if passphrase was enabled when key was created. " +
-          "If PrivateKey is selected for Authentication")
+    "If PrivateKey is selected for Authentication")
   @Macro
   @Nullable
   public String passphrase;
@@ -74,7 +74,9 @@ public class SFTPActionConfig extends PluginConfig {
     return host;
   }
 
-  public int getPort() { return (port != null) ? port : 22; }
+  public int getPort() {
+    return (port != null) ? port : 22;
+  }
 
   public String getUserName() {
     return userName;
@@ -84,14 +86,19 @@ public class SFTPActionConfig extends PluginConfig {
     return password;
   }
 
-  public byte[] getPrivateKey() { return privateKey.getBytes(StandardCharsets.UTF_8); }
+  public byte[] getPrivateKey() {
+    return privateKey.getBytes(StandardCharsets.UTF_8);
+  }
 
-  public String getAuthTypeBeingUsed() { return authTypeBeingUsed; }
+  public String getAuthTypeBeingUsed() {
+    return authTypeBeingUsed;
+  }
 
-  public byte[] getPassphrase(){
-    return passphrase == null ? new byte[0] : passphrase.getBytes(StandardCharsets.UTF_8); }
+  public byte[] getPassphrase() {
+    return passphrase == null ? new byte[0] : passphrase.getBytes(StandardCharsets.UTF_8);
+  }
 
-  public Map<String, String> getSSHProperties(){
+  public Map<String, String> getSSHProperties() {
     Map<String, String> properties = new HashMap<>();
     // Default set to no
     properties.put("StrictHostKeyChecking", "no");

@@ -34,9 +34,9 @@ public class SFTPConnector implements AutoCloseable {
   private static Channel channel;
   private final Session session;
 
-    //Connector Object to be used for Auth with Password
+  //Connector Object to be used for Auth with Password
   public SFTPConnector(String host, int port, String userName, String password,
-                         Map<String, String> sessionProperties) throws Exception {
+                       Map<String, String> sessionProperties) throws Exception {
     JSch jsch = new JSch();
     this.session = jsch.getSession(userName, host, port);
     session.setPassword(password);
@@ -49,11 +49,12 @@ public class SFTPConnector implements AutoCloseable {
     channel = session.openChannel("sftp");
     channel.connect();
   }
+
   // Connector Object to be used for Auth with SSH PrivateKey.
   public SFTPConnector(String host, int port, String userName, byte[] privateKey,
-      byte[] passphrase, Map<String, String> sessionProperties) throws Exception {
+                       byte[] passphrase, Map<String, String> sessionProperties) throws Exception {
     JSch jsch = new JSch();
-    jsch.addIdentity("key", privateKey,null, passphrase);
+    jsch.addIdentity("key", privateKey, null, passphrase);
     this.session = jsch.getSession(userName, host, port);
     LOG.info("Properties {}", sessionProperties);
     Properties properties = new Properties();
@@ -64,10 +65,13 @@ public class SFTPConnector implements AutoCloseable {
     channel = session.openChannel("sftp");
     channel.connect();
   }
+
   /**
    * Get the established sftp channel to perform operations.
    */
-  public static ChannelSftp getSftpChannel() { return (ChannelSftp) channel; }
+  public static ChannelSftp getSftpChannel() {
+    return (ChannelSftp) channel;
+  }
 
   @Override
   public void close() {

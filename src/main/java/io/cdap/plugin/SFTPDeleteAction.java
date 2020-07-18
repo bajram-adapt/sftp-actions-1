@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 public class SFTPDeleteAction extends Action {
   private static final Logger LOG = LoggerFactory.getLogger(SFTPDeleteAction.class);
   private SFTPDeleteActionConfig config;
+
   public SFTPDeleteAction(SFTPDeleteActionConfig config) {
     this.config = config;
   }
@@ -54,7 +55,7 @@ public class SFTPDeleteAction extends Action {
     public String filesToDelete;
 
     @Description("Boolean flag to determine if execution should continue if there is an error while deleting any file." +
-            " Defaults to 'false'.")
+      " Defaults to 'false'.")
     boolean continueOnError;
 
     public String getFilesToDelete() {
@@ -62,7 +63,7 @@ public class SFTPDeleteAction extends Action {
     }
 
     public SFTPDeleteActionConfig(String host, int port, String userName, String password,
-                                String sshProperties, String filesToDelete, String authType){
+                                  String sshProperties, String filesToDelete, String authType) {
       this.host = host;
       this.port = port;
       this.userName = userName;
@@ -86,34 +87,34 @@ public class SFTPDeleteAction extends Action {
     }
     if (config.getAuthTypeBeingUsed().equals("privatekey-select")) {
       try (SFTPConnector SFTPConnector = new SFTPConnector(config.getHost(), config.getPort(), config.getUserName(),
-              config.getPrivateKey(), config.getPassphrase(), config.getSSHProperties())) {
+        config.getPrivateKey(), config.getPassphrase(), config.getSSHProperties())) {
         sftpDeleteLogic(filesToDelete, SFTPConnector);
-      } catch (Exception e){
+      } catch (Exception e) {
         LOG.error(String.valueOf(e));
       }
     } else {
       try (SFTPConnector SFTPConnector = new SFTPConnector(config.getHost(), config.getPort(), config.getUserName(),
-              config.getPassword(), config.getSSHProperties())) {
+        config.getPassword(), config.getSSHProperties())) {
         sftpDeleteLogic(filesToDelete, SFTPConnector);
-      } catch (Exception e){
+      } catch (Exception e) {
         LOG.error(String.valueOf(e));
       }
     }
   }
 
-    private void sftpDeleteLogic (String filesToDelete, SFTPConnector SFTPConnector) throws SftpException {
+  private void sftpDeleteLogic(String filesToDelete, SFTPConnector SFTPConnector) throws SftpException {
       ChannelSftp channelSftp = SFTPConnector.getSftpChannel();
-      for (String fileToDelete : filesToDelete.split(",")) {
-        LOG.info("Deleting {}", fileToDelete);
-        try {
-          channelSftp.rm(fileToDelete);
-        } catch (Throwable t) {
-          if (config.continueOnError) {
-            LOG.warn("Error deleting file {}.", fileToDelete, t);
-          } else {
-            throw t;
-          }
+    for (String fileToDelete : filesToDelete.split(",")) {
+      LOG.info("Deleting {}", fileToDelete);
+      try {
+        channelSftp.rm(fileToDelete);
+      } catch (Throwable t) {
+        if (config.continueOnError) {
+          LOG.warn("Error deleting file {}.", fileToDelete, t);
+        } else {
+          throw t;
         }
       }
     }
   }
+}

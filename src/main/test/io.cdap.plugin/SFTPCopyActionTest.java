@@ -34,45 +34,46 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 public class SFTPCopyActionTest {
-MockSftpServer server;
-    Session sshSession;
+  MockSftpServer server;
+  Session sshSession;
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
-    @Before
-    public void initSftp() throws IOException {
-        server = new MockSftpServer(9022);
-    }
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
 
-    @Before
-    public void initSshClient() throws JSchException {
-        JSch jsch = new JSch();
-        sshSession = jsch.getSession("tester", "localhost", 9022);
-        Properties config = new Properties();
-        config.setProperty("StrictHostKeyChecking", "no");
-        sshSession.setConfig(config);
-        sshSession.setPassword("testing");
-        sshSession.connect();
-    }
+  @Before
+  public void initSftp() throws IOException {
+    server = new MockSftpServer(9022);
+  }
 
-    @After
-    public void stopSftp() throws IOException {
-        server.stop();
-    }
+  @Before
+  public void initSshClient() throws JSchException {
+    JSch jsch = new JSch();
+    sshSession = jsch.getSession("tester", "localhost", 9022);
+    Properties config = new Properties();
+    config.setProperty("StrictHostKeyChecking", "no");
+    sshSession.setConfig(config);
+    sshSession.setPassword("testing");
+    sshSession.connect();
+  }
 
-    @Test
-    public void testCopyFile() throws Exception {
-        File tempFile = tempFolder.newFile();
-        Files.write(tempFile.toPath(), "test".getBytes(StandardCharsets.UTF_8));
-        String sourcePath = tempFile.getAbsoluteFile().toString();
-        String destPath = server.getBaseDirectory().toString();
-        SFTPCopyAction.SFTPCopyActionConfig config = new SFTPCopyAction.SFTPCopyActionConfig(
-                "localhost", 9022, "tester", "testing", "",
-                sourcePath, destPath, "password");
-        MockPipelineConfigurer configurer = new MockPipelineConfigurer(null);
-        new SFTPCopyAction(config).configurePipeline(configurer);
-        new SFTPCopyAction(config).run(new MockActionContext());
-    }
+  @After
+  public void stopSftp() throws IOException {
+    server.stop();
+  }
+
+  @Test
+  public void testCopyFile() throws Exception {
+    File tempFile = tempFolder.newFile();
+    Files.write(tempFile.toPath(), "test".getBytes(StandardCharsets.UTF_8));
+    String sourcePath = tempFile.getAbsoluteFile().toString();
+    String destPath = server.getBaseDirectory().toString();
+    SFTPCopyAction.SFTPCopyActionConfig config = new SFTPCopyAction.SFTPCopyActionConfig(
+      "localhost", 9022, "tester", "testing", "",
+      sourcePath, destPath, "password");
+    MockPipelineConfigurer configurer = new MockPipelineConfigurer(null);
+    new SFTPCopyAction(config).configurePipeline(configurer);
+    new SFTPCopyAction(config).run(new MockActionContext());
+  }
 }
 
 

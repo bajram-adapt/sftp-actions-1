@@ -29,39 +29,39 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class SFTPDeleteTest {
-    MockSftpServer server;
-    Session sshSession;
+  MockSftpServer server;
+  Session sshSession;
 
-    @Before
-    public void initSftp() throws IOException {
-      server = new MockSftpServer(9022);
-    }
+  @Before
+  public void initSftp() throws IOException {
+    server = new MockSftpServer(9022);
+  }
 
-    @Before
-    public void initSshClient() throws JSchException {
-      JSch jsch = new JSch();
-      sshSession = jsch.getSession("tester", "localhost", 9022);
-      Properties config = new Properties();
-      config.setProperty("StrictHostKeyChecking", "no");
-      sshSession.setConfig(config);
-      sshSession.setPassword("testing");
-      sshSession.connect();
-    }
+  @Before
+  public void initSshClient() throws JSchException {
+    JSch jsch = new JSch();
+    sshSession = jsch.getSession("tester", "localhost", 9022);
+    Properties config = new Properties();
+    config.setProperty("StrictHostKeyChecking", "no");
+    sshSession.setConfig(config);
+    sshSession.setPassword("testing");
+    sshSession.connect();
+  }
 
-    @After
-    public void stopSftp() throws IOException {
-      server.stop();
-    }
+  @After
+  public void stopSftp() throws IOException {
+    server.stop();
+  }
 
-    @Test
-    public void testCopyFile() throws Exception {
-      SFTPDeleteAction.SFTPDeleteActionConfig config = new SFTPDeleteAction.SFTPDeleteActionConfig(
-                    "localhost", 9022, "tester", "testing",
-                    "", "", "password");
-      MockPipelineConfigurer configurer = new MockPipelineConfigurer(null);
-      new SFTPDeleteAction(config).configurePipeline(configurer);
-      new SFTPDeleteAction(config).run(new MockActionContext());
-    }
+  @Test
+  public void testCopyFile() throws Exception {
+    SFTPDeleteAction.SFTPDeleteActionConfig config = new SFTPDeleteAction.SFTPDeleteActionConfig(
+      "localhost", 9022, "tester", "testing",
+      "", "", "password");
+    MockPipelineConfigurer configurer = new MockPipelineConfigurer(null);
+    new SFTPDeleteAction(config).configurePipeline(configurer);
+    new SFTPDeleteAction(config).run(new MockActionContext());
+  }
 }
 
 

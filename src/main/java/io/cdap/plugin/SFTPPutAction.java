@@ -45,7 +45,8 @@ import javax.annotation.Nullable;
 public class SFTPPutAction extends Action {
   private static final Logger LOG = LoggerFactory.getLogger(SFTPPutAction.class);
   private SFTPPutActionConfig config;
-  public SFTPPutAction(SFTPPutActionConfig config){
+
+  public SFTPPutAction(SFTPPutActionConfig config) {
     this.config = config;
   }
 
@@ -54,6 +55,7 @@ public class SFTPPutAction extends Action {
     super.configurePipeline(pipelineConfigurer);
     config.validate();
   }
+
   /**
    * Configurations for the SFTP put action plugin.
    */
@@ -84,7 +86,7 @@ public class SFTPPutAction extends Action {
     }
 
     public SFTPPutActionConfig(String host, int port, String userName, String password,
-        String sshProperties, String srcPath, String destDirectory, String authType){
+                               String sshProperties, String srcPath, String destDirectory, String authType) {
       this.host = host;
       this.port = port;
       this.userName = userName;
@@ -110,23 +112,23 @@ public class SFTPPutAction extends Action {
     }
     if (config.getAuthTypeBeingUsed().equals("privatekey-select")) {
       try (SFTPConnector sftp = new SFTPConnector(config.getHost(), config.getPort(), config.getUserName(),
-              config .getPrivateKey(), config.getPassphrase(), config.getSSHProperties())) {
+        config.getPrivateKey(), config.getPassphrase(), config.getSSHProperties())) {
         sftpPutLogic(fileSystem, source, sftp);
-      } catch (Exception e){
+      } catch (Exception e) {
         LOG.error(String.valueOf(e));
       }
     } else {
       try (SFTPConnector sftp = new SFTPConnector(config.getHost(), config.getPort(), config.getUserName(),
-              config.getPassword(), config.getSSHProperties())) {
+        config.getPassword(), config.getSSHProperties())) {
         sftpPutLogic(fileSystem, source, sftp);
-      } catch (Exception e){
+      } catch (Exception e) {
         LOG.error(String.valueOf(e));
       }
     }
   }
 
   private void sftpPutLogic(FileSystem fileSystem, Path source, SFTPConnector sftp)
-      throws SftpException, IOException {
+    throws SftpException, IOException {
     ChannelSftp channel = sftp.getSftpChannel();
     try {
       channel.mkdir(config.getDestDirectory());
